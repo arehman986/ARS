@@ -1,0 +1,39 @@
+void reserveSeat(int searchFlightNumber) {
+    ifstream inFile("flights.txt");
+    ofstream outFile("temp.txt");
+
+    if (!inFile.is_open() || !outFile.is_open()) {
+        cerr << "Error opening file." << endl;
+        return;
+    }
+
+    bool found = false;
+    string line;
+    while (getline(inFile, line)) {
+        stringstream ss(line);
+        Flight flight;
+        ss >> flight.flightNumber >> flight.destination >> flight.departureTime >> flight.ticketPrice >> flight.totalSeats >> flight.availableSeats;
+
+        if (flight.flightNumber == searchFlightNumber) {
+            found = true;
+            if (flight.availableSeats > 0) {
+                flight.availableSeats--;
+                cout << "Seat reserved successfully!\n";
+            } else {
+                cout << "No available seats for this flight.\n";
+            }
+        }
+        outFile << flight.flightNumber << " " << flight.destination << " " << flight.departureTime << " "
+                << flight.ticketPrice << " " << flight.totalSeats << " " << flight.availableSeats << endl;
+    }
+
+    if (!found) {
+        cout << "Flight not found.\n";
+    }
+
+    inFile.close();
+    outFile.close();
+
+    remove("flights.txt");
+    rename("temp.txt", "flights.txt");
+}
