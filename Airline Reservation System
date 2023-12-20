@@ -1,0 +1,110 @@
+#include <iostream>
+#include <fstream>
+#include <ctime>
+#include <vector>
+#include <sstream>
+
+using namespace std;
+
+struct Flight {
+    int flightNumber;
+    string destination;
+    string departureTime;
+    double ticketPrice;
+    int totalSeats;
+    int availableSeats;
+    vector<string> passengerList;
+};
+
+void displayMenu() {
+    cout << "\nAirline Management System\n";
+    cout << "1. Add Flight\n";
+    cout << "2. Display Flights\n";
+    cout << "3. Reserve Seat\n";
+    cout << "4. Check Seat Avalibility\n";
+    cout << "5. Exit\n";
+    cout << "Enter your choice: ";
+}
+
+void addFlight() {
+    ofstream file("flights.txt", ios::app);
+    if (!file.is_open()) {
+        cerr << "Error opening file." << endl;
+        return;
+    }
+
+    Flight newFlight;
+
+    cout << "\nAvailable Destinations:\n";
+    cout << "1. Lahore\n";
+    cout << "2. Riyadh\n";
+    cout << "3. Dubai\n";
+
+    int destinationChoice;
+    cout << "Choose destination: ";
+    cin >> destinationChoice;
+    
+    // Set destination and ticket price based on user choice
+    switch (destinationChoice) {
+        case 1:
+            newFlight.destination = "Lahore";
+            newFlight.ticketPrice = 100.0;
+            break;
+        case 2:
+            newFlight.destination = "Riyadh";
+            newFlight.ticketPrice = 400.0;
+            break;
+        case 3:
+            newFlight.destination = "Dubai";
+            newFlight.ticketPrice = 700.0;
+            break;
+        default:
+            cout << "Invalid choice.\n";
+            file.close();
+            return;
+    }
+
+    static int nextFlightNumber = 1;
+    newFlight.flightNumber = nextFlightNumber++;
+    if (newFlight.flightNumber > 100) {
+        cout << "Cannot add more flights. Maximum flight limit reached." << endl;
+        return;
+    }
+
+    newFlight.availableSeats = newFlight.totalSeats = 50;
+
+    cout << "\nAvailable Departure Time Slots:\n";
+    cout << "1. Morning (8 AM - 11 AM)\n";
+    cout << "2. Afternoon (12 PM - 4 PM)\n";
+    cout << "3. Evening (5 PM - 8 PM)\n";
+
+    int timeSlotChoice;
+    cout << "Choose departure time slot: ";
+    cin >> timeSlotChoice;
+
+    switch (timeSlotChoice) {
+        case 1:
+            newFlight.departureTime = "Morning (8 AM - 11 AM)";
+            break;
+        case 2:
+            newFlight.departureTime = "Afternoon (12 PM - 4 PM)";
+            break;
+        case 3:
+            newFlight.departureTime = "Evening (5 PM - 8 PM)";
+            break;
+        default:
+            cout << "Invalid choice.\n";
+            file.close();
+            return;
+    }
+
+    // Write only necessary information to the file
+    file << newFlight.flightNumber << " " << newFlight.destination << " "
+         << newFlight.departureTime << " " << newFlight.ticketPrice << endl;
+
+    cout << "\nFlight added successfully!\n";
+    cout << "Flight Number: " << newFlight.flightNumber << endl;
+    cout << "Ticket Price: " << newFlight.ticketPrice << endl;
+
+    file.close();
+}
