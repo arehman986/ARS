@@ -1,0 +1,21 @@
+void displayFlights() {
+    ifstream file("flights.txt");
+    if (!file.is_open()) {
+        cerr << "Error opening file." << endl;
+        return;
+    }
+
+    string line;
+    cout << "\nFlight Details:\n";
+
+    while (getline(file, line)) {
+        stringstream ss(line);
+        string token;
+        while (ss >> token) {
+            cout << token << " ";
+        }
+        cout << endl;
+    }
+
+    file.close();
+}
