@@ -1,0 +1,26 @@
+void checkSeatAvailability(int searchFlightNumber) {
+    ifstream file("flights.txt");
+
+    if (!file.is_open()) {
+        cerr << "Error opening file." << endl;
+        return;
+    }
+
+    Flight flight;
+    bool found = false;
+
+    while (file >> flight.flightNumber >> flight.destination >> flight.departureTime >> flight.ticketPrice >> flight.totalSeats >> flight.availableSeats) {
+        if (flight.flightNumber == searchFlightNumber) {
+            found = true;
+            int availableSeats = min(flight.availableSeats, 50);
+            cout << "Available seats for Flight Number " << flight.flightNumber << ": " << flight.availableSeats << endl;
+            break;
+        }
+    }
+
+    if (!found) {
+        cout << "Flight not found.\n";
+    }
+
+    file.close();
+}
